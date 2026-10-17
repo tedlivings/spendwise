@@ -40,3 +40,6 @@ replay_pid*
 node_modules/
 .angular/
 dist/
+
+# Personnal files
+Retour_Expériences.md
