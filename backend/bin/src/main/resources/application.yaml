@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: spendwise-backend
+  config:
+    import: optional:file:.env[.properties]
+  profiles:
+    default: dev
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
