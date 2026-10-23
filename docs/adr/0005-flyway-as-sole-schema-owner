@@ -1,0 +1,40 @@
+# ADR-0005 : Flyway as sole schema owner
+
+- **Statut** : Accepted
+- **Date** : 2026-10-19
+
+## Contexte
+
+L'application dispose de plusieurs environnements de développement et de déploiement, à savoir dev, test et prod,
+nous avons besoin de nous assurer que la structure de la base de données reste identique dans chaque environnement, ainsi que nous assurer de l'évolution de la base de données dans le temps, sans erreur et de façon reproductible.
+
+## Options envisagées
+
+1. Hibernate
+2. Liquibase
+3. Flyway
+
+## Décision
+
+L'option 3. Flyway est utilisé pour versionner et automatiser les évolutions du schéma de base de données,
+garantissant que chaque environnement (dev, test et prod) reste synchronisé.
+Il résout principalement les problèmes liés aux modifications manuelles ou à l'utilisation de `ddl-auto=update`.
+Flyway est le seul à modifier le schéma, et Hibernate est configuré en `ddl-auto: validate`. une migration appliquée n’est jamais modifiée.
+
+## Conséquences
+
+1. Hibernate
+
+- Positives: Aucun script à écrire
+- Négatives: Ni historique ni renommage fiable, comportement non reproductible
+
+2. Liquidebase:
+
+- Positives: Très complet (formats XML/YAML/SQL, fonctions avancées)
+- Négatives: Plus lourd à apprendre, plus verbeux
+
+3. Flyway:
+
+- Positives : contrôle et traçabilité: les changements sont stockés sous forme de scripts SQL versionnées (ex: V1\_\_create_event_publication_table.sql);
+  flyway vérifie l'intégrité des scripts via des checksums et bloque si un script à été modifié;
+- Négatives / compromis acceptés : demande une compréhension fine des bases de données et du sql pour écrire les scripts; Moins de fonctions avancées en version gratuite
